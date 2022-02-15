@@ -18,14 +18,10 @@ This might be useful to people wanting to do NLP in a non-`JVM` language without
 
 ## Running `processors-server`
 
-```bash
-git clone https://github.com/clu-ling/processors-server.git
-```
-
-Fire up the server.  This may take a minute or so to load the large model files.
+Fire up the server.  This may take a several minutes or so to load the large model files.
 
 ```bash
-cd processors-server
+cd odins_runes
 sbt "runMain NLPServer"
 ```
 
