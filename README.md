@@ -18,8 +18,8 @@ This might be useful to people wanting to do NLP in a non-`JVM` language without
 
 ## Running `processors-server`
 
-Fire up the server.  This may take a several minutes or so to load the large model files.
-
+Fire up the server. This may take a several minutes or so to load the large model files.<br>
+Use run configuration _main_ for IntellijIdea or execute the following:
 ```bash
 cd odins_runes
 sbt "runMain NLPServer"
