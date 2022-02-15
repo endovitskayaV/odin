@@ -82,14 +82,15 @@ trait Processor extends ProcessorAnnotator {
     * Annotate the given document, returning an annotated document. The default implementation
     * is an NLP pipeline of side-effecting calls.
     */
-  def annotate (doc:Document): Document = {
+  def annotate(doc: Document): Document = {
     tagPartsOfSpeech(doc)
     lemmatize(doc)
-    recognizeNamedEntities(doc)
-    parse(doc)
-    chunking(doc)
-    resolveCoreference(doc)
-    discourse(doc)
+    //TODO: pass flags from request to include annotators
+//    recognizeNamedEntities(doc)
+//    parse(doc)
+//    chunking(doc)
+//    resolveCoreference(doc)
+//    discourse(doc)
     doc.clear()
     doc
   }

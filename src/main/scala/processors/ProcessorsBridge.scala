@@ -107,12 +107,23 @@ object ProcessorsBridge {
 
   def getMentions(doc: Document, rules: String): Seq[Mention] = {
     val engine = ExtractorEngine(rules)
+    getMentions(doc, engine)
+  }
+
+  def getMentions(doc: Document, engine: ExtractorEngine): Seq[Mention] = {
     val odinMentions = engine.extractFrom(doc)
     odinMentions
   }
 
   def getMentionsAsJSON(doc: Document, rules: String): JValue = {
     Try(getMentions(doc, rules)) match {
+      case Success(mentions) => ConverterUtils.toJSON(mentions)
+      case Failure(error)    => ConverterUtils.toJSON(error)
+    }
+  }
+
+  def getMentionsAsJSON(doc: Document, engine: ExtractorEngine): JValue = {
+    Try(getMentions(doc, engine)) match {
       case Success(mentions) => ConverterUtils.toJSON(mentions)
       case Failure(error)    => ConverterUtils.toJSON(error)
     }
