@@ -1,5 +1,3 @@
-import ReleaseTransformations._
-
 lazy val commonSettings = Seq(
   organization := "org.clulab",
   scalaVersion := "2.11.11",
@@ -12,7 +10,6 @@ lazy val commonSettings = Seq(
   //
   // publish to a maven repo
   publishMavenStyle := true,
-
   // the standard maven repository
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
@@ -21,9 +18,8 @@ lazy val commonSettings = Seq(
     else
       Some("releases" at nexus + "service/local/staging/deploy/maven2")
   },
-
   // let’s remove any repositories for optional dependencies in our artifact
-  pomIncludeRepository := { _ => false },
+//  pomIncludeRepository := { _ => false },
 
   // mandatory stuff to add to the pom for publishing
   pomExtra :=
@@ -52,10 +48,9 @@ lazy val commonSettings = Seq(
   //
 )
 
-lazy val root = (project in file("."))
-  .settings(commonSettings: _*)
+lazy val processors = (project in file("."))
+  .settings(commonSettings)
   .settings(
-    publishArtifact := false,
     publishTo := Some("dummy" at "nowhere"),
     publish := {},
     publishLocal := {},
@@ -65,43 +60,36 @@ lazy val root = (project in file("."))
       (Keys.`package` in (main, Compile)).value
     }
   )
-  .aggregate(main, odin, corenlp, modelsmain, modelscorenlp, openie)
-  .dependsOn(main, odin, corenlp, modelsmain, modelscorenlp, openie) // so that we can import from the console
+  .aggregate(main, odin, corenlp, openie)
+  .dependsOn(main, odin, corenlp, openie) // so that we can import from the console
 
 lazy val main = project
-  .settings(commonSettings: _*)
-  .dependsOn(modelsmain % "test")
+  .settings(commonSettings)
 
 lazy val odin = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .dependsOn(main % "test->test;compile->compile")
 
 lazy val corenlp = project
-  .settings(commonSettings: _*)
-  .dependsOn(main % "test->test;compile->compile", modelscorenlp)
-
-lazy val modelsmain = project
-  .settings(commonSettings: _*)
-
-lazy val modelscorenlp = project
-  .settings(commonSettings: _*)  
+  .settings(commonSettings)
+  .dependsOn(main % "test->test;compile->compile")
 
 lazy val openie = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .dependsOn(main % "test->test;compile->compile", odin)
 
 // release steps
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  runTest,
-  setReleaseVersion,
-  commitReleaseVersion,
-  tagRelease,
-  ReleaseStep(action = Command.process("publishSigned", _)),
-  setNextVersion,
-  commitNextVersion,
-  ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
-  pushChanges
-)
+//releaseProcess := Seq[ReleaseStep](
+//  checkSnapshotDependencies,
+//  inquireVersions,
+//  runClean,
+//  runTest,
+//  setReleaseVersion,
+//  commitReleaseVersion,
+//  tagRelease,
+//  ReleaseStep(action = Command.process("publishSigned", _)),
+//  setNextVersion,
+//  commitNextVersion,
+//  ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+//  pushChanges
+//)
