@@ -16,7 +16,7 @@ lazy val commonScalacOptions = Seq(
 lazy val commonSettings = Seq(
   name := "processors-server",
   organization := "parsertongue",
-  scalaVersion := "2.12.15",
+  scalaVersion := "2.13.8",
   scalacOptions ++= commonScalacOptions,
   scalacOptions += "-Ywarn-unused-import",
   scalacOptions in (Compile, console) := commonScalacOptions,
@@ -132,7 +132,7 @@ val procV = "6.3.0"
 libraryDependencies ++= {
   val akkaV = "2.6.18"
   val akkaHTTPV = "10.2.8"
-  val json4sV = "4.0.3" // "3.5.3"
+  val json4sV = "4.0.4" // "3.5.3"
  // val procV = "6.3.0"
 
   Seq(

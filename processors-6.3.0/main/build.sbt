@@ -2,7 +2,7 @@ name := "processors-main"
 
 libraryDependencies ++= {
   val akkaV = "2.6.18"
-  val json4sVersion = "4.0.3"
+  val json4sVersion = "4.0.4"
 
   Seq(
     // common tools
@@ -11,7 +11,7 @@ libraryDependencies ++= {
     "com.io7m.xom"           % "xom"                       % "1.2.10",
     "org.json4s"             %% "json4s-core"              % json4sVersion,
     "org.json4s"             %% "json4s-jackson"           % json4sVersion,
-    "ai.lum"                 %% "common"                   % "0.0.8", // 0.1.5
+//    "ai.lum"                 %% "common"                   % "0.0.8", // 0.1.5
     "jline"                  % "jline"                     % "2.14.6", // was moved to org.jline
     "commons-io"             % "commons-io"                % "2.11.0",
     // for machine learning
