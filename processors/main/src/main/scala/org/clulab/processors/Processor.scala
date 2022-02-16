@@ -90,13 +90,13 @@ trait Processor {
   def annotate (doc:Document): Document = {
     tagPartsOfSpeech(doc)
     lemmatize(doc)
-    recognizeNamedEntities(doc)
-    parse(doc)
-    chunking(doc)
-    relationExtraction(doc)
-    srl(doc)
-    resolveCoreference(doc)
-    discourse(doc)
+//    recognizeNamedEntities(doc)
+//    parse(doc)
+//    chunking(doc)
+//    relationExtraction(doc)
+//    srl(doc)
+//    resolveCoreference(doc)
+//    discourse(doc)
     doc.clear()
     doc
   }
