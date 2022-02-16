@@ -7,7 +7,7 @@
     </option>
     <option name="tasks" value="&quot;runMain NLPServer&quot;" />
     <option name="useSbtShell" value="false" />
-    <option name="vmparams" value="-Xms512M -Xmx1024M -Xss1M -XX:+CMSClassUnloadingEnabled" />
+    <option name="vmparams" value="-Xmx5G" />
     <option name="workingDir" value="$PROJECT_DIR$" />
     <method v="2" />
   </configuration>

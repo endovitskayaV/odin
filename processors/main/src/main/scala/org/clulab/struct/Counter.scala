@@ -2,12 +2,11 @@ package org.clulab.struct
 
 import java.io.{Reader, Writer}
 import java.text.DecimalFormat
-
 import scala.collection.breakOut
 import scala.collection.mutable
-import scala.math.Ordering.{ Double => DoubleSortOrder }
-
+import scala.math.Ordering.{Double => DoubleSortOrder}
 import org.clulab.utils.Files
+import org.json4s.JsonAST.JValue
 
 /**
  * Counts elements of type T
@@ -178,10 +177,16 @@ class Counter[T] (
 
   def values: Seq[Double] = toSeq.map(_._2)
 
-  def toJSON: String = scala.util.parsing.json.JSONObject(toSeq.toMap.map(
-  {
-    case (k, v) => k.toString -> v
-  })).toString()
+  def toJSON: String = {
+    import org.json4s.JsonDSL.WithDouble._
+    import org.json4s.jackson.JsonMethods
+
+    val json: JValue = toSeq.toMap.map({
+      case (k, v) => k.toString -> v
+    })
+
+    JsonMethods.compact(JsonMethods.render(json))
+  }
 
   def zipWith(f: (Double,  Double) => Double)(other:Counter[T]): Counter[T] = {
     val out = new Counter[T](defaultReturnValue)
