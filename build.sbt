@@ -123,7 +123,7 @@ lazy val root = (project in file("."))
   .dependsOn(processors)
 
 
-lazy val processors = project.in(file("processors-6.3.0"))
+lazy val processors = project.in(file("processors"))
 
 resolvers += Resolver.bintrayRepo("hseeberger", "maven")
 
