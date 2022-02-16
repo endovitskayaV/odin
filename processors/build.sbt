@@ -6,7 +6,7 @@ val scala13 = "2.13.5"  // up to 2.13.5
 ThisBuild / crossScalaVersions := Seq(scala12, scala11)
 ThisBuild / scalaVersion := crossScalaVersions.value.head
 
-lazy val root = (project in file("."))
+lazy val processors = (project in file("."))
   .aggregate(main, corenlp, openie)
   .dependsOn(main, corenlp, openie) // so that we can import from the console
   .settings(
