@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets
 import org.apache.commons.io.FileUtils
 import org.json4s._
 
-
 trait JSONSerialization {
 
   def jsonAST: JValue

@@ -167,15 +167,18 @@ class Reader {
 
   def toLemmas(tokens:Array[CoNLLToken]):Array[String] = tokens.map(_.lemma)
 
-  def toDirectedGraph(tokens:Array[CoNLLToken]):DirectedGraph[String] = {
+  def toDirectedGraph(tokens: Array[CoNLLToken]): DirectedGraph[String] = {
     val edges = new mutable.ListBuffer[(Int, Int, String)] // head, modifier, label
     val roots = new mutable.HashSet[Int]()
-    for(modifier <- tokens.indices) {
+    for (modifier <- tokens.indices) {
       val head = tokens(modifier).dep._1
-      if(head >= 0)
+      if (head >= 0) {
         edges += new Tuple3(head, modifier, tokens(modifier).dep._2)
-      else
+        ()
+      } else {
         roots += modifier
+        ()
+      }
     }
     DirectedGraph[String](DirectedGraph.triplesToEdges[String](edges.toList), roots.toSet)
   }
