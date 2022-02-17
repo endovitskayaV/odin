@@ -19,6 +19,9 @@ import org.json4s.{ jackson, DefaultFormats, JNothing, JValue }
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.ExecutionContextExecutor
 import com.typesafe.config.Config
+import org.clulab.odin.ExtractorEngine
+
+import scala.collection.mutable
 
 trait Service {
 
@@ -275,11 +278,19 @@ trait Service {
                   complete(json)
                 case twr if twr \ "text" != JNothing && twr \ "rules" != JNothing =>
                   logger.info(s"Odin endpoint received TextWithRules")
-                  val text = (twr \ "text").extract[String]
-                  val rules = (twr \ "rules").extract[String]
-                  val document = ProcessorsBridge.annotateWithFastNLP(text)
-                  val json = ProcessorsBridge.getMentionsAsJSON(document, rules)
-                  complete(json)
+                  val texts = (twr \ "text").extract[List[String]]
+                  val rulesStr = (twr \ "rules").extract[String]
+                  val engine = ExtractorEngine(rulesStr)
+                  var mentionsJson = mutable.MutableList[JValue]()
+                  var text_i = 0
+                  for (text <- texts) {
+                    val document = ProcessorsBridge.annotateWithFastNLP(text)
+                    val textMentionsJson = ProcessorsBridge.getMentionsAsJSON(document, engine)
+                    mentionsJson += textMentionsJson
+                    text_i += 1
+                    logger.info(text_i.toString)
+                  }
+                  complete(mentionsJson)
                 case twu if twu \ "text" != JNothing && twu \ "url" != JNothing =>
                   logger.info(s"Odin endpoint received TextWithRulesURL")
                   val text = (twu \ "text").extract[String]

@@ -6,7 +6,6 @@ import org.clulab.processors.{ Document, Processor, Sentence }
 import org.clulab.processors.corenlp.CoreNLPSentimentAnalyzer
 //import org.clulab.processors.bionlp.BioNLPProcessor
 import org.clulab.processors.clu.CluProcessor
-import org.clulab.processors.fastnlp.FastNLPProcessor
 import org.clulab.processors.shallownlp.ShallowNLPProcessor
 import org.clulab.openie.entities.RuleBasedEntityFinder
 import org.json4s.JsonAST.JValue
@@ -17,7 +16,7 @@ object ProcessorsBridge {
 
   // initialize a processor
   // withDiscourse is disabled to control memory consumption
-  lazy val fastnlp = new FastNLPProcessor(withDiscourse = ShallowNLPProcessor.NO_DISCOURSE)
+  lazy val fastnlp = new FastNLPProcessorImpl(withDiscourse = ShallowNLPProcessor.NO_DISCOURSE)
 //  lazy val bionlp = new BioNLPProcessor(withChunks = false, withDiscourse = ShallowNLPProcessor.NO_DISCOURSE)
   lazy val clu = new CluProcessor()
   lazy val ef = RuleBasedEntityFinder(maxHops = 3)
@@ -107,12 +106,23 @@ object ProcessorsBridge {
 
   def getMentions(doc: Document, rules: String): Seq[Mention] = {
     val engine = ExtractorEngine(rules)
+    getMentions(doc, engine)
+  }
+
+  def getMentions(doc: Document, engine: ExtractorEngine): Seq[Mention] = {
     val odinMentions = engine.extractFrom(doc)
     odinMentions
   }
 
   def getMentionsAsJSON(doc: Document, rules: String): JValue = {
     Try(getMentions(doc, rules)) match {
+      case Success(mentions) => ConverterUtils.toJSON(mentions)
+      case Failure(error)    => ConverterUtils.toJSON(error)
+    }
+  }
+
+  def getMentionsAsJSON(doc: Document, engine: ExtractorEngine): JValue = {
+    Try(getMentions(doc, engine)) match {
       case Success(mentions) => ConverterUtils.toJSON(mentions)
       case Failure(error)    => ConverterUtils.toJSON(error)
     }
