@@ -146,23 +146,23 @@ trait Service {
                 complete(json)
               }
             } ~
-            path("api" / "bionlp" / "annotate") {
-              entity(as[api.TextMessage]) { m =>
-                logger.info(s"BioNLPProcessor received POST with text -> ${m.text}")
-                val processorsDoc = ProcessorsBridge.annotateWithBioNLP(m.text)
-                val json = ConverterUtils.toJSON(processorsDoc)
-                complete(json)
-              }
-            } ~
+//            path("api" / "bionlp" / "annotate") {
+//              entity(as[api.TextMessage]) { m =>
+//                logger.info(s"BioNLPProcessor received POST with text -> ${m.text}")
+//                val processorsDoc = ProcessorsBridge.annotateWithBioNLP(m.text)
+//                val json = ConverterUtils.toJSON(processorsDoc)
+//                complete(json)
+//              }
+//            } ~
             // annotate from sentences
-            path("api" / "bionlp" / "annotate") {
-              entity(as[api.SegmentedMessage]) { sm =>
-                logger.info(s"BioNLPProcessor received POST with text already segmented into sentences ")
-                val processorsDoc = ProcessorsBridge.annotateWithBioNLP(sm.segments)
-                val json = ConverterUtils.toJSON(processorsDoc)
-                complete(json)
-              }
-            } ~
+//            path("api" / "bionlp" / "annotate") {
+//              entity(as[api.SegmentedMessage]) { sm =>
+//                logger.info(s"BioNLPProcessor received POST with text already segmented into sentences ")
+//                val processorsDoc = ProcessorsBridge.annotateWithBioNLP(sm.segments)
+//                val json = ConverterUtils.toJSON(processorsDoc)
+//                complete(json)
+//              }
+//            } ~
             // chunk
             path("api" / "fastnlp" / "chunk") {
               entity(as[JValue]) {

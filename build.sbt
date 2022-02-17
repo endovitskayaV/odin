@@ -128,7 +128,7 @@ lazy val root = (project in file("."))
 
 resolvers += Resolver.bintrayRepo("hseeberger", "maven")
 
-val procV = "6.3.0"
+val procV = "8.4.8"
 
 libraryDependencies ++= {
   val akkaV = "2.5.9"
@@ -152,10 +152,7 @@ libraryDependencies ++= {
     // processors
     "org.clulab" %% "processors-main"          % procV,
     "org.clulab" %% "processors-corenlp"       % procV,
-    "org.clulab" %% "processors-odin"          % procV,
     "org.clulab" %% "processors-openie"          % procV,
-    "org.clulab" %% "processors-modelsmain"    % procV,
-    "org.clulab" %% "processors-modelscorenlp" % procV,
     // testing
     "org.specs2"        %% "specs2-core"  % "2.3.11" % "test",
     "com.typesafe.akka" %% "akka-testkit" % akkaV    % "test",
