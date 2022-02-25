@@ -280,17 +280,24 @@ trait Service {
                   logger.info(s"Odin endpoint received TextWithRules")
                   val texts = (twr \ "text").extract[List[String]]
                   val rulesStr = (twr \ "rules").extract[String]
-                  val engine = ExtractorEngine(rulesStr)
-                  var mentionsJson = mutable.MutableList[JValue]()
-                  var text_i = 0
-                  for (text <- texts) {
-                    val document = ProcessorsBridge.annotateWithFastNLP(text)
-                    val textMentionsJson = ProcessorsBridge.getMentionsAsJSON(document, engine)
-                    mentionsJson += textMentionsJson
-                    text_i += 1
-                    logger.info(text_i.toString)
+                  try {
+                    // TODO: try-catch only engine creating
+                    val engine = ExtractorEngine(rulesStr)
+                    var mentionsJson = mutable.MutableList[JValue]()
+                    var text_i = 0
+                    for (text <- texts) {
+                      val document = ProcessorsBridge.annotateWithFastNLP(text)
+                      val textMentionsJson = ProcessorsBridge.getMentionsAsJSON(document, engine)
+                      mentionsJson += textMentionsJson
+                      text_i += 1
+                      logger.info(text_i.toString)
+                    }
+                    complete(mentionsJson)
+                  } catch {
+                      case e: Throwable => {
+                        complete(ConverterUtils.toJSON(e))
+                      }
                   }
-                  complete(mentionsJson)
                 case twu if twu \ "text" != JNothing && twu \ "url" != JNothing =>
                   logger.info(s"Odin endpoint received TextWithRulesURL")
                   val text = (twu \ "text").extract[String]
