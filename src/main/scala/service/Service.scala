@@ -277,25 +277,32 @@ trait Service {
                   complete(json)
                 case twr if twr \ "text" != JNothing && (twr \ "rules" != JNothing || twr \ "rules" == JNothing && twr \ "url" == JNothing) =>
                   logger.info(s"Odin endpoint received text without url")
-                  val texts = (twr \ "text").extract[List[String]]
-                  var engine = ProcessorsBridge.engine
-                  if (twr \ "rules" != JNothing) {
-                    logger.info(s"Using custom rules")
-                    val rulesStr = (twr \ "rules").extract[String]
-                    engine = ExtractorEngine(rulesStr)
-                    logger.info(s"Parsed custom rules")
-                  }
+                  try {
+                    // TODO: try-catch only engine creating
+                    val texts = (twr \ "text").extract[List[String]]
+                    var engine = ProcessorsBridge.engine
+                    if (twr \ "rules" != JNothing) {
+                      logger.info(s"Using custom rules")
+                      val rulesStr = (twr \ "rules").extract[String]
+                      engine = ExtractorEngine(rulesStr)
+                      logger.info(s"Parsed custom rules")
+                    }
 
-                  var mentionsJson = mutable.MutableList[JValue]()
-                  var text_i = 0
-                  for (text <- texts) {
-                    val document = ProcessorsBridge.annotateWithFastNLP(text)
-                    val textMentionsJson = ProcessorsBridge.getMentionsAsJSON(document, engine)
-                    mentionsJson += textMentionsJson
-                    text_i += 1
-                    logger.info(text_i.toString)
+                    var mentionsJson = mutable.MutableList[JValue]()
+                    var text_i = 0
+                    for (text <- texts) {
+                      val document = ProcessorsBridge.annotateWithFastNLP(text)
+                      val textMentionsJson = ProcessorsBridge.getMentionsAsJSON(document, engine)
+                      mentionsJson += textMentionsJson
+                      text_i += 1
+                      logger.info(text_i.toString)
+                    }
+                    complete(mentionsJson)
+                  } catch {
+                    case e: Throwable => {
+                      complete(ConverterUtils.toJSON(e))
+                    }
                   }
-                  complete(mentionsJson)
                 case twu if twu \ "text" != JNothing && twu \ "url" != JNothing =>
                   logger.info(s"Odin endpoint received TextWithRulesURL")
                   val text = (twu \ "text").extract[String]
