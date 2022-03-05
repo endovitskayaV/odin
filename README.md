@@ -4,6 +4,9 @@ Current version: 3.2.1
 
 # processors-server
 
+## IMPORTANT
+**Use version from development branch (with core odin rules version = 6.3.0), since master branch (core odin rules version = 8) contains [bug](https://github.com/clulab/processors/issues/602)**
+
 ## What is it?
 
 An `akka-http` server exposing a REST API for text annotation via the [`processors`](https://github.com/clulab/processors) library
