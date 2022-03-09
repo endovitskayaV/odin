@@ -10,6 +10,8 @@ import org.clulab.processors.fastnlp.FastNLPProcessor
 import org.clulab.processors.shallownlp.ShallowNLPProcessor
 import org.clulab.openie.entities.RuleBasedEntityFinder
 import org.json4s.JsonAST.JValue
+import org.clulab.odin.ExtractorEngine
+import scala.io.Source
 
 import scala.util.{ Failure, Success, Try }
 
@@ -24,6 +26,8 @@ object ProcessorsBridge {
 
   // fastnlp has an NER component plugged in
   val defaultProc: Processor = fastnlp
+
+  val engine: ExtractorEngine = ExtractorEngine(Source.fromResource("rules.yaml").mkString)
 
   /** annotate text */
   def annotate(text: String): Document = toAnnotatedDocument(text, defaultProc)

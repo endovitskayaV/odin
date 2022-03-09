@@ -278,13 +278,11 @@ trait Service {
                 case twr if twr \ "text" != JNothing && twr \ "rules" != JNothing =>
                   logger.info(s"Odin endpoint received TextWithRules")
                   val texts = (twr \ "text").extract[List[String]]
-                  val rulesStr = (twr \ "rules").extract[String]
-                  val engine = ExtractorEngine(rulesStr)
                   var mentionsJson = mutable.MutableList[JValue]()
                   var text_i = 0
                   for (text <- texts) {
                     val document = ProcessorsBridge.annotateWithFastNLP(text)
-                    val textMentionsJson = ProcessorsBridge.getMentionsAsJSON(document, engine)
+                    val textMentionsJson = ProcessorsBridge.getMentionsAsJSON(document, ProcessorsBridge.engine)
                     mentionsJson += textMentionsJson
                     text_i += 1
                     logger.info(text_i.toString)
