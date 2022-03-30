@@ -7,18 +7,17 @@ vars:
   # not [tag=FW] to avoid capturing random FW like 'i.e'
   preposition: ([word=in] | [tag=IN])
   prep_dt_modifier: (${preposition} [tag=DT]? ${modifier})
-  # only one conjunction (or/and) is allowed to balance mentions boundaries
-  qualifier_full: ${qualifier}+ ([tag=CC] ${qualifier}+)? ${qualifier}*
-  modifier_full: ${prep_dt_modifier}+  ([tag=CC] ${preposition}? [tag=DT]? ${modifier})?
+  qualifier_full: ${qualifier}+
+  modifier_full: ${prep_dt_modifier}+
 
 rules:
   - name: ner-cancer
     label: CANCER
     priority: 1
     type: token
-    example1: "basal cell or squamous cell carcinoma of the skin and colon"
-    example2: "basal cell or squamous cell carcinoma"
-    example3: "carcinoma of the skin and colon"
+    example1: "squamous cell carcinoma of the skin"
+    example2: "squamous cell carcinoma"
+    example3: "carcinoma of the skin"
     comment: "3 separate rules lead to mentions intersections"
     pattern: |
       (${qualifier_full} ${cancer} ${modifier_full}) |
