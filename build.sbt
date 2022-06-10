@@ -129,7 +129,7 @@ resolvers += Resolver.bintrayRepo("hseeberger", "maven")
 //for processors-models
 resolvers += ("Artifactory" at "http://artifactory.cs.arizona.edu:8081/artifactory/sbt-release").withAllowInsecureProtocol(true)
 
-val procV = "8.4.8"
+val procV = "6.3.0"
 
 libraryDependencies ++= {
   val akkaV = "2.5.32"
@@ -153,7 +153,10 @@ libraryDependencies ++= {
     // processors
     "org.clulab" %% "processors-main"          % procV,
     "org.clulab" %% "processors-corenlp"       % procV,
-    "org.clulab" %% "processors-openie"          % procV,
+    "org.clulab" %% "processors-odin"          % procV,
+    "org.clulab" %% "processors-openie"        % procV,
+    "org.clulab" %% "processors-modelsmain"    % procV,
+    "org.clulab" %% "processors-modelscorenlp" % procV,
     // testing
     "org.specs2"        %% "specs2-core"  % "4.10.6" % "test",
     "com.typesafe.akka" %% "akka-testkit" % akkaV    % "test",

@@ -276,13 +276,18 @@ trait Service {
                   val rules = (dwr \ "rules").extract[String]
                   val json = ProcessorsBridge.getMentionsAsJSON(document, rules)
                   complete(json)
-                case twr if twr \ "text" != JNothing && twr \ "rules" != JNothing =>
-                  logger.info(s"Odin endpoint received TextWithRules")
-                  val texts = (twr \ "text").extract[List[String]]
-                  val rulesStr = (twr \ "rules").extract[String]
+                case twr if twr \ "text" != JNothing && (twr \ "rules" != JNothing || twr \ "rules" == JNothing && twr \ "url" == JNothing) =>
+                  logger.info(s"Odin endpoint received text without url")
                   try {
                     // TODO: try-catch only engine creating
-                    val engine = ExtractorEngine(rulesStr)
+                    val texts = (twr \ "text").extract[List[String]]
+                    var engine = ProcessorsBridge.engine
+                    if (twr \ "rules" != JNothing) {
+                      logger.info(s"Using custom rules")
+                      val rulesStr = (twr \ "rules").extract[String]
+                      engine = ExtractorEngine(rulesStr)
+                      logger.info(s"Parsed custom rules")
+                    }
                     var mentionsJson = mutable.MutableList[JValue]()
                     var text_i = 0
                     for (text <- texts) {

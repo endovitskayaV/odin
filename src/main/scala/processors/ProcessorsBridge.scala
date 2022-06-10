@@ -9,6 +9,8 @@ import org.clulab.processors.clu.CluProcessor
 import org.clulab.processors.shallownlp.ShallowNLPProcessor
 import org.clulab.openie.entities.RuleBasedEntityFinder
 import org.json4s.JsonAST.JValue
+import org.clulab.processors.fastnlp.FastNLPProcessor
+import org.clulab.odin.ExtractorEngine
 
 import scala.util.{ Failure, Success, Try }
 
@@ -16,13 +18,15 @@ object ProcessorsBridge {
 
   // initialize a processor
   // withDiscourse is disabled to control memory consumption
-  lazy val fastnlp = new FastNLPProcessorImpl(withDiscourse = ShallowNLPProcessor.NO_DISCOURSE)
+  lazy val fastnlp = new FastNLPProcessor(withDiscourse = ShallowNLPProcessor.NO_DISCOURSE)
 //  lazy val bionlp = new BioNLPProcessor(withChunks = false, withDiscourse = ShallowNLPProcessor.NO_DISCOURSE)
   lazy val clu = new CluProcessor()
   lazy val ef = RuleBasedEntityFinder(maxHops = 3)
 
   // fastnlp has an NER component plugged in
   val defaultProc: Processor = fastnlp
+
+  val engine: ExtractorEngine = ExtractorEngine(scala.io.Source.fromInputStream(getClass.getResourceAsStream("/rules.yaml")).mkString)
 
   /** annotate text */
   def annotate(text: String): Document = toAnnotatedDocument(text, defaultProc)
