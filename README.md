@@ -27,3 +27,6 @@ sbt "runMain NLPServer --host <your favorite host here> --port <your favorite po
 ```
 
 For further details visit [processors server](https://github.com/clu-ling/processors-server)
+
+
+**!!!Review annotators src/main/scala/org/clulab/processors/Processor.scala. You may need to add extra (recognizeNamedEntities, for example)!!!**
