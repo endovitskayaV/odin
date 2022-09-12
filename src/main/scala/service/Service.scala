@@ -12,6 +12,7 @@ import processors.{ api, ConverterUtils, ProcessorsBridge }
 import org.clulab.processors
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport._
 import org.json4s._
+import org.json4s.jackson.JsonMethods._
 import org.json4s.JsonDSL._
 import org.json4s.{ jackson, DefaultFormats, JNothing, JValue }
 
@@ -278,7 +279,6 @@ trait Service {
                 case twr if twr \ "text" != JNothing && (twr \ "rules" != JNothing || twr \ "rules" == JNothing && twr \ "url" == JNothing) =>
                   logger.info(s"Odin endpoint received text without url")
                   try {
-                    // TODO: try-catch only engine creating
                     val texts = (twr \ "text").extract[List[String]]
                     var engine = ProcessorsBridge.engine
                     if (twr \ "rules" != JNothing) {
@@ -310,6 +310,24 @@ trait Service {
                   val document = ProcessorsBridge.annotateWithFastNLP(text)
                   val json = ProcessorsBridge.getMentionsAsJSON(document, ConverterUtils.urlToRules(url))
                   complete(json)
+              }
+            } ~
+            path("api" / "odin" / "load-rules") {
+              entity(as[JValue]) {
+                case twr if twr \ "rules" != JNothing =>
+                  logger.info(s"Odin endpoint received rules to load")
+                  try {
+                    logger.info(s"Parsing custom rules")
+                    val rulesStr = (twr \ "rules").extract[String]
+                    ProcessorsBridge.engine = ExtractorEngine(rulesStr)
+                    logger.info(s"Parsed custom rules")
+                    complete(parse("""{"is_success":true}"""))
+                  }
+                  catch {
+                    case e: Throwable => {
+                      complete(ConverterUtils.toJSON(e))
+                    }
+                  }
               }
             } ~
             path("api" / "openie" / "entities" / "extract") {

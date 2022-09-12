@@ -27,7 +27,7 @@ object ProcessorsBridge {
   // fastnlp has an NER component plugged in
   val defaultProc: Processor = fastnlp
 
-  val engine: ExtractorEngine = ExtractorEngine(Source.fromResource("rules.yaml").mkString)
+  var engine: ExtractorEngine = ExtractorEngine(Source.fromResource("rules.yaml").mkString)
 
   /** annotate text */
   def annotate(text: String): Document = toAnnotatedDocument(text, defaultProc)
