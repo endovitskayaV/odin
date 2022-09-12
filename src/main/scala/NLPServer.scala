@@ -5,6 +5,7 @@ import akka.stream.ActorMaterializer
 import com.typesafe.config.{ ConfigFactory, ConfigValueFactory }
 import service.Service
 import utils._
+import org.clulab.processors.ProcessorsConstants._
 
 object NLPServer extends App with Service {
 
@@ -43,6 +44,6 @@ object ServerConfig {
   val defaults = Map(port -> defaultPort, host -> defaultHostName)
 
   def initializeResources(): Unit = {
-    val _ = processors.ProcessorsBridge.defaultProc.annotate("blah")
+    val _ = processors.ProcessorsBridge.defaultProc.annotate("blah", false, POS + PROCESSORS_DELIMITER + LEM + PROCESSORS_DELIMITER + NER)
   }
 }

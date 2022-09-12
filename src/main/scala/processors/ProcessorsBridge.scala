@@ -12,6 +12,7 @@ import org.clulab.openie.entities.RuleBasedEntityFinder
 import org.json4s.JsonAST.JValue
 import org.clulab.odin.ExtractorEngine
 import scala.io.Source
+import org.clulab.processors.ProcessorsConstants._
 
 import scala.util.{ Failure, Success, Try }
 
@@ -31,7 +32,7 @@ object ProcessorsBridge {
 
   /** annotate text */
   def annotate(text: String): Document = toAnnotatedDocument(text, defaultProc)
-  def annotateWithFastNLP(text: String): Document = toAnnotatedDocument(text, fastnlp)
+  def annotateWithFastNLP(text: String, processors: String = DEFAULT_PROCESSORS): Document = toAnnotatedDocument(text, fastnlp, processors)
   def annotateWithBioNLP(text: String): Document = toAnnotatedDocument(text, bionlp)
   def annotateWithClu(text: String): Document = toAnnotatedDocument(text, clu)
 
@@ -83,8 +84,8 @@ object ProcessorsBridge {
 //  }
 
   // convert processors document to a json-serializable format
-  def toAnnotatedDocument(text: String, proc: Processor): Document = {
-    proc.annotate(text, keepText = true)
+  def toAnnotatedDocument(text: String, proc: Processor, processors: String = DEFAULT_PROCESSORS): Document = {
+    proc.annotate(text, keepText = true, processors)
   }
 
   def toSentimentScores(text: String): SentimentScores = {

@@ -170,7 +170,7 @@ class Reader {
     if(proc == null) return null
 
     val doc = proc.mkDocumentFromSentences(text, keepText = false)
-    proc.annotate(doc)
+    proc.annotateDoc(doc)
 
     doc
   }

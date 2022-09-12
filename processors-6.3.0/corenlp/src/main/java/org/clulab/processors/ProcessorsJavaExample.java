@@ -15,7 +15,7 @@ public class ProcessorsJavaExample {
         //Processor proc = new FastNLPProcessor(true, false, false, 1);
 
         // the actual work is done here
-        Document doc = proc.annotate("John Smith went to China. He visited Beijing, on January 10th, 2013.", false);
+        Document doc = proc.annotate("John Smith went to China. He visited Beijing, on January 10th, 2013.", false, null);
 
         // you are basically done. the rest of this code simply prints out the annotations
 

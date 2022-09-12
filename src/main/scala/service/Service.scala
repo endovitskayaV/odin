@@ -15,6 +15,7 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.JsonDSL._
 import org.json4s.{ jackson, DefaultFormats, JNothing, JValue }
+import org.clulab.processors.ProcessorsConstants._
 
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.ExecutionContextExecutor
@@ -288,10 +289,15 @@ trait Service {
                       logger.info(s"Parsed custom rules")
                     }
 
+                    var processors = DEFAULT_PROCESSORS
+                    if (twr \ "processors" != JNothing) {
+                      processors = (twr \ "processors").extract[String]
+                    }
+
                     var mentionsJson = mutable.MutableList[JValue]()
                     var text_i = 0
                     for (text <- texts) {
-                      val document = ProcessorsBridge.annotateWithFastNLP(text)
+                      val document = ProcessorsBridge.annotateWithFastNLP(text, processors)
                       val textMentionsJson = ProcessorsBridge.getMentionsAsJSON(document, engine)
                       mentionsJson += textMentionsJson
                       text_i += 1

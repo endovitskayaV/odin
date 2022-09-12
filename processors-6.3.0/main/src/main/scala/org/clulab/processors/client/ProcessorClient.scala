@@ -16,6 +16,7 @@ import org.clulab.processors._
 import org.clulab.processors.csshare.ProcessorCSController
 import org.clulab.processors.csshare.ProcessorCSMessages._
 import org.clulab.serialization.DocumentSerializer
+import org.clulab.processors.ProcessorsConstants._
 
 /**
   * Client to access the Processors Server remotely using Akka.
@@ -116,7 +117,7 @@ class ProcessorClient (
   }
 
   /** Annotate the given text string, specify whether to retain the text in the resultant Document. */
-  override def annotate (text:String, keepText:Boolean = false): Document = {
+  override def annotate (text:String, keepText:Boolean = false, processors: String = DEFAULT_PROCESSORS): Document = {
     val reply = callServer(AnnotateTextCmd(text, keepText))
     serializer.load(reply.asInstanceOf[TextMsg].text, SERIALIZER_ENCODING)
   }

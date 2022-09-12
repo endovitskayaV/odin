@@ -3,6 +3,7 @@ package org.clulab.processors
 import org.clulab.struct.Internalizer
 
 import scala.collection.mutable.ListBuffer
+import org.clulab.processors.ProcessorsConstants._
 
 /**
   * User: mihais
@@ -55,9 +56,9 @@ trait Processor extends ProcessorAnnotator {
 
 
   /** Annotate the given text string, specify whether to retain the text in the resultant Document. */
-  override def annotate (text:String, keepText:Boolean = false): Document = {
+  override def annotate (text:String, keepText:Boolean = false, processors: String = DEFAULT_PROCESSORS): Document = {
     val doc = mkDocument(preprocessText(text), keepText)
-    annotate(doc)
+    annotateDoc(doc, processors)
   }
 
   /** Annotate the given sentences, specify whether to retain the text in the resultant Document. */
@@ -66,7 +67,7 @@ trait Processor extends ProcessorAnnotator {
     keepText:Boolean = false): Document =
   {
     val doc = mkDocumentFromSentences(preprocessSentences(sentences), keepText)
-    annotate(doc)
+    annotateDoc(doc)
   }
 
   /** Annotate the given tokens, specify whether to retain the text in the resultant Document. */
@@ -75,22 +76,28 @@ trait Processor extends ProcessorAnnotator {
     keepText:Boolean = false): Document =
   {
     val doc = mkDocumentFromTokens(preprocessTokens(sentences), keepText)
-    annotate(doc)
+    annotateDoc(doc)
   }
 
   /**
     * Annotate the given document, returning an annotated document. The default implementation
     * is an NLP pipeline of side-effecting calls.
     */
-  def annotate(doc: Document): Document = {
-    tagPartsOfSpeech(doc)
-    lemmatize(doc)
-    //TODO: pass flags from request to include annotators
-//    recognizeNamedEntities(doc)
-//    parse(doc)
-//    chunking(doc)
-//    resolveCoreference(doc)
-//    discourse(doc)
+  def annotateDoc(doc: Document, processors: String = DEFAULT_PROCESSORS): Document = {
+    val processorsList = processors.split(PROCESSORS_DELIMITER)
+    if (processorsList.contains(POS)) {
+      tagPartsOfSpeech(doc)
+      if (processorsList.contains(LEM)) {
+        lemmatize(doc)
+        if (processorsList.contains(NER)) {
+          recognizeNamedEntities(doc)
+        }
+      }
+    }
+    //    parse(doc)
+    //    chunking(doc)
+    //    resolveCoreference(doc)
+    //    discourse(doc)
     doc.clear()
     doc
   }

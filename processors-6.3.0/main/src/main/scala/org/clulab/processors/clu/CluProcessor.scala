@@ -15,6 +15,7 @@ import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import CluProcessor._
 import org.clulab.sequences.{LexiconNER, Tagger}
+import org.clulab.processors.ProcessorsConstants._
 
 /**
   * Processor that uses only tools that are under Apache License
@@ -96,7 +97,7 @@ class CluProcessor (val config: Config = ConfigFactory.load("cluprocessoropen"))
     new EnsembleMaltParser(getArgStrings(s"$prefix.parser.models", None))
 
 
-  override def annotate(doc:Document): Document = {
+  override def annotateDoc(doc:Document, processors: String = DEFAULT_PROCESSORS): Document = {
     // with this processor, we lemmatize first, because this POS tagger uses lemmas as features
     lemmatize(doc)
     tagPartsOfSpeech(doc)

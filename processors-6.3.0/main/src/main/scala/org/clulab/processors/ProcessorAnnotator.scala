@@ -4,6 +4,7 @@ import scala.collection.mutable.ListBuffer
 
 import org.clulab.processors.csshare.ProcessorCSController
 import org.clulab.struct.Internalizer
+import org.clulab.processors.ProcessorsConstants._
 
 /**
   * Common interface for accessing either CLU Lab or CoreNLP processors.
@@ -13,7 +14,7 @@ import org.clulab.struct.Internalizer
 trait ProcessorAnnotator extends ProcessorCSController {
 
   /** Annotate the given text string, specify whether to retain the text in the resultant Document. */
-  def annotate (text:String, keepText:Boolean = false): Document
+  def annotate (text:String, keepText:Boolean = false, processors: String = DEFAULT_PROCESSORS): Document
 
   /** Annotate the given sentences, specify whether to retain the text in the resultant Document. */
   def annotateFromSentences (sentences:Iterable[String], keepText:Boolean = false): Document
